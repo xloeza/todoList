@@ -13,6 +13,13 @@ class App extends Component {
     this.addTodo = this.addTodo.bind(this);      
     this.handleRemove = this.handleRemove.bind(this);  
   }   
+  componentDidMount() {
+    fetch('/todos/todos')
+          .then(res => { 
+            return res.json();
+          })
+          .then(todos => this.setState({ items: todos }));
+  }
   
   addTodo(val){
     let count = this.state.lastId + 1;
