@@ -8,9 +8,9 @@ const Todo = ({todo, remove}) => {
         <li className={ checkedClass }>
             <input type="checkbox" id={"todo-item-" + todo.key}/>
             <form className="update-form clearfix"  autoComplete="off">
-                <input type="text" id={"input-text" + todo.key}  className={todoHide} />
+                <input type="text" id={"input-text" + todo.key}   />
             </form>
-            <label className={todoHide}>
+            <label >
                 {todo.text}
             </label>
             <button onClick={() => {remove(todo.key)}}>X</button> 

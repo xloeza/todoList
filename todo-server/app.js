@@ -5,6 +5,7 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
+
 var index = require('./routes/index');
 var users = require('./routes/users');
 var todos = require('./routes/todos');
@@ -19,13 +20,31 @@ app.set('view engine', 'jade');
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+var dbConfig = require('./config/database.config.js');
+var mongoose = require('mongoose');
+
+mongoose.connect(dbConfig.url, {
+  useMongoClient: true
+});
+
+mongoose.connection.on('error', function() {
+  console.log('Could not connect to the database. Exiting now...');
+  process.exit();
+});
+
+mongoose.connection.once('open', function() {
+  console.log("Successfully connected to the database");
+})
+
 
 app.use('/', index);
 app.use('/users', users);
 app.use('/todos', todos);
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

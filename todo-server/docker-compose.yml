@@ -1,0 +1,25 @@
+version: "3.4"
+
+services:
+  todo-app:
+    image: node:8.9.4-alpine
+    depends_on:
+      - db
+    networks:
+      - backend
+    ports: 
+      - "3002:3000"
+      - "9229:9229"
+    working_dir: /usr/src/app
+    volumes:
+      - ./:/usr/src/app
+    command: npm run dev
+  db:
+    image: mongo
+    ports: 
+      - "27117:27017"
+    networks:
+      - backend
+
+networks: 
+  backend:

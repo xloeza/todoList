@@ -18,15 +18,38 @@ class App extends Component {
           .then(res => { 
             return res.json();
           })
-          .then(todos => this.setState({ items: todos }));
+          .then(todos => {            
+            this.setState({ items: todos.data, })
+            
+          })
+          .catch(function(err){
+            console.error(err);
+          });
   }
   
-  addTodo(val){
+  addTodo(val){    
     let count = this.state.lastId + 1;
-    this.setState(...this.state, {lastId : count});     
-    let newItems = [...this.state.items];
-    newItems.push(todo(this.state.lastId, val, false, false)); 
-    this.setState(...this.state, {items: newItems});
+    let newItem = todo(this.state.lastId, val, false, false);
+    fetch('/todos/todos', {
+      method: 'POST',
+      redirect: 'follow',
+      body: JSON.stringify({ newItem }),
+      headers: new Headers({
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+      })
+    })
+    .then(res => {
+        this.setState(...this.state, {lastId : count});     
+        let newItems = [...this.state.items];
+        newItems.push(todo(this.state.lastId, val, false, false)); 
+        this.setState(...this.state, {items: newItems});
+        return res.json
+    })
+    .catch(err => console.error);
+
+    
+    
   }
   
   handleRemove(key){
