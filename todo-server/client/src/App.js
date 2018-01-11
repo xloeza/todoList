@@ -3,13 +3,13 @@ import './App.css';
 import FormTodo from './components/formTodo.js'
 import TodoList from './components/todoList.js'
 
-let todo = (key, text, completed, isEditable) => ({key, text, completed, isEditable});
+let todo = (_id, text, completed, isEditable) => ({_id, text, completed, isEditable});
 
 class App extends Component {  
 
   constructor(props) {
     super(props);
-    this.state = { items: [], lastId: 0 }; 
+    this.state = { items: []}; 
     this.addTodo = this.addTodo.bind(this);      
     this.handleRemove = this.handleRemove.bind(this);  
   }   
@@ -39,10 +39,12 @@ class App extends Component {
         Accept: 'application/json',
       })
     })
-    .then(res => {
-        this.setState(...this.state, {lastId : count});     
+    .then(res => { 
+      return res.json();
+    })
+    .then(res => {            
         let newItems = [...this.state.items];
-        newItems.push(todo(this.state.lastId, val, false, false)); 
+        newItems.push(todo(res._id, val, false, false)); 
         this.setState(...this.state, {items: newItems});
         return res.json
     })
@@ -52,12 +54,23 @@ class App extends Component {
     
   }
   
-  handleRemove(key){
-    const remainder = this.state.items.filter((todo) => {
-        return (todo.key !== key);
+  handleRemove(_id){
+    fetch('/todos/todos/'+_id, {
+      method: 'DELETE'      
+    })
+    .then(res => { 
+      return res.json();
+    })
+    .then(res => { 
+      const remainder = this.state.items.filter((todo) => {
+        return (todo._id !== _id);
       });
-    this.setState({items: remainder});  
+    this.setState({items: remainder});
+    })
+    .catch(err => console.error);
+  
   }
+
   render() {
     return (  
       <div>    

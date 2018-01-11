@@ -6,21 +6,21 @@ const Todo = ({todo, remove}) => {
     let todoHide = todo.isEditable === true? "" :"todo-hide";
     return (
         <li className={ checkedClass }>
-            <input type="checkbox" id={"todo-item-" + todo.key}/>
+            <input type="checkbox" id={"todo-item-" + todo._id}/>
             <form className="update-form clearfix"  autoComplete="off">
-                <input type="text" id={"input-text" + todo.key}   />
+                <input type="text" id={"input-text" + todo._id}   />
             </form>
             <label >
                 {todo.text}
             </label>
-            <button onClick={() => {remove(todo.key)}}>X</button> 
+            <button onClick={() => {remove(todo._id)}}>X</button> 
       </li>   
     );
 }
 
 const TodoList = ({todos, remove}) => {
     const todoNode = todos.map((todo) => {
-      return (<Todo todo={todo} key={todo.key} remove={remove}/>)
+      return (<Todo todo={todo} _id={todo._id} remove={remove}/>)
     });
    
     return(
@@ -31,17 +31,5 @@ const TodoList = ({todos, remove}) => {
         </div>
     );
   }
-
-// const Todo = ({todo, remove}) => {   
-//     return (<a href="#" className="list-group-item" onClick={() => {remove(todo.key)}}>{todo.text}</a>);
-//   }
-  
-//   const TodoList = ({todos, remove}) => {
-  
-//     const todoNode = todos.map((todo) => {
-//       return (<Todo todo={todo} key={todo.key} remove={remove}/>)
-//     });
-//     return (<div className="list-group" style={{marginTop:'30px'}}>{todoNode}</div>);
-//   }
   
 export default TodoList;

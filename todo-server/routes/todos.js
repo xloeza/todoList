@@ -39,4 +39,14 @@ router.post('/todos', function (req, res, next) {
   
 })
 
+router.delete('/todos/:_id', function (req, res, next) {
+  
+  Todo.remove({_id: req.params._id}, function(err, data) {
+    if(err) {
+      return res.status(500).json({error: err});
+    } else {
+        res.send({message: "Todo deleted successfully!"})
+    }
+  });  
+})
 module.exports = router;
