@@ -1,0 +1,37 @@
+version: "3.4"
+
+services:
+  todo-api:      
+    image: node:8.9.4-alpine
+    depends_on:
+      - db
+    networks:
+      - backend
+    ports: 
+      - "3002:3000"
+      - "9229:9229"
+    working_dir: /usr/src/app
+    volumes:
+      - ./todo-server:/usr/src/app
+    command: npm run dev
+  todo-app:
+    environment: 
+      - HTTP_PROXY=http://localhost:3002
+    image: node:8.9.4-alpine
+    depends_on: 
+      - todo-api
+    ports:
+      - "80:3000"      
+    working_dir: /usr/src/app
+    volumes:
+      - ./client:/usr/src/app
+    command: npm start
+  db:
+    image: mongo
+    ports: 
+      - "27117:27017"
+    networks:
+      - backend
+
+networks: 
+  backend:
